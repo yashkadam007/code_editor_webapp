@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import JsonResponse
 import os
 import subprocess
 
@@ -27,8 +26,8 @@ def text_editor(request):
 
         # Run the code and capture the output
         run_cmd = ['./{}'.format(filename[:-4])]
-        p = subprocess.Popen(run_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = p.communicate()
+        p = subprocess.Popen(run_cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = p.communicate(input=request.POST.get('input').encode())
         output = out.decode('utf-8')
 
         # Delete the user's unique file
